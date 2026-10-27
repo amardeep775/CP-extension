@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CF Recall - Master Codeforces with Recall Tracking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --border: rgba(255, 255, 255, 0.08);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --solo: #10b981;
+      --hint: #f59e0b;
+      --sol: #ef4444;
+      --revisit: #ec4899;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 40px 20px 80px;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(99, 102, 241, 0.12);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    p.lead {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 30px;
+    }
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-main {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+    }
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(99, 102, 241, 0.5);
+    }
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    /* Feature Grid */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin: 60px 0;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+    .card-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .card p {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    /* Status Explanation Badges */
+    .status-legend {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 40px 0;
+    }
+    .legend-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .legend-box.solo { border-left: 4px solid var(--solo); }
+    .legend-box.hint { border-left: 4px solid var(--hint); }
+    .legend-box.sol { border-left: 4px solid var(--sol); }
+    .legend-box.revisit { border-left: 4px solid var(--revisit); }
+    .legend-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+    .legend-desc { font-size: 12px; color: var(--text-muted); }
+
+    /* Steps Section */
+    .steps-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      margin: 40px 0;
+    }
+    .steps-section h2 {
+      font-size: 22px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .step-item {
+      display: flex;
+      gap: 16px;
+    }
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.2);
+      color: #818cf8;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-content h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .step-content p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #38bdf8;
+      font-size: 12px;
+    }
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-tag">⚡ Codeforces Practice Supercharged</div>
+      <h1>CF Recall & Solve Mastery Tracker</h1>
+      <p class="lead">
+        Never forget how you solved a Codeforces problem. Track whether you solved it completely <b>Solo</b>, with <b>Tutorial/Hints</b>, or looked at the <b>Solution</b> — with notes, tags, and automated spaced repetition!
+      </p>
+      <div class="hero-actions">
+        <a href="cf-recall-dashboard/index.html" class="btn btn-main">
+          📊 Launch Web Dashboard
+        </a>
+        <a href="cf-recall-dashboard/index.html" class="btn btn-main" style="background: linear-gradient(135deg, #10b981, #06b6d4); box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);">
+          🎯 Open Practice Arena & Submitter
+        </a>
+        <a href="demo/mock-codeforces.html" class="btn btn-outline">
+          🧪 Try Codeforces Simulation
+        </a>
+      </div>
+    </header>
+
+    <!-- 4 Mastery Classifications -->
+    <div class="status-legend">
+      <div class="legend-box solo">
+        <div class="legend-title" style="color: var(--solo);">🟢 Solved Solo</div>
+        <div class="legend-desc">0 hints, no editorial. You solved and coded it completely independently.</div>
+      </div>
+      <div class="legend-box hint">
+        <div class="legend-title" style="color: var(--hint);">🟡 With Tutorial / Hint</div>
+        <div class="legend-desc">Looked at hint 1/2 or skimmed editorial for the main observation.</div>
+      </div>
+      <div class="legend-box sol">
+        <div class="legend-title" style="color: var(--sol);">🔴 Solution Upsolved</div>
+        <div class="legend-desc">Had to look at full solution code or watch a video walkthrough.</div>
+      </div>
+      <div class="legend-box revisit">
+        <div class="legend-title" style="color: var(--revisit);">⭐ Spaced Repetition</div>
+        <div class="legend-desc">Queued for re-solving after 3-7 days to build real muscle memory.</div>
+      </div>
+    </div>
+
+    <!-- Feature Grid -->
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon">🧩</div>
+        <h3>Chrome Extension Overlay</h3>
+        <p>Directly injects onto any Codeforces problem page and problemset list. Select solve method, take notes, and track time spent without ever leaving CF.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📈</div>
+        <h3>True Mastery Ratio</h3>
+        <p>Stop lying to yourself with just green AC checks. View your true Solo vs Editorial percentage broken down across rating tiers (800 to 2400+).</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔁</div>
+        <h3>Automated Revision Queue</h3>
+        <p>Whenever you need a tutorial to solve a problem, toggle "Revisit Later". The dashboard organizes your queue so you re-attempt them independently.</p>
+      </div>
+    </div>
+
+    <!-- Setup Guide -->
+    <div class="steps-section">
+      <h2>🚀 How to Load into Google Chrome in 15 Seconds</h2>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Open Extensions Manager in Chrome</h4>
+            <p>Open Google Chrome and navigate to <code>chrome://extensions</code> in your address bar.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Enable Developer Mode</h4>
+            <p>Toggle the <b>Developer mode</b> switch in the top-right corner of the Extensions page.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Click "Load unpacked"</h4>
+            <p>Click the <b>Load unpacked</b> button in the top-left and select this folder:<br>
+            <code>/Users/amardeepkumar/.../cf-recall-extension</code></p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Open Codeforces!</h4>
+            <p>Go to any problem on <a href="https://codeforces.com/problemset" target="_blank" style="color:#818cf8;">codeforces.com/problemset</a>. You will see the sleek CF Recall pill at the bottom right and next to the problem title!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      CF Recall &bull; Built with love for Competitive Programmers
+    </footer>
+  </div>
+</body>
+</html>

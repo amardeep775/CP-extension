@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CF Recall - Codeforces Solve & Recall Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header-row">
+        <div class="sidebar-brand">
+          <div class="brand-logo">
+            <div class="logo-bar bar-yellow"></div>
+            <div class="logo-bar bar-blue"></div>
+            <div class="logo-bar bar-red"></div>
+          </div>
+          <div>
+            <h2>CF Recall</h2>
+            <span class="subtext">Recall & Upsolve Tracker</span>
+          </div>
+        </div>
+        <button id="collapseSidebarBtn" class="btn-sidebar-toggle" title="Hide Left Tab Bar (Collapse)">
+          ◀
+        </button>
+      </div>
+
+      <!-- Navigation tabs -->
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="dashboard">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item nav-highlight" data-tab="arena">
+          <span class="nav-icon">🎯</span>
+          <span>Practice Arena</span>
+          <span class="nav-pill pill-arena">NEW</span>
+        </button>
+        <button class="nav-item" data-tab="problems">
+          <span class="nav-icon">💡</span>
+          <span>Saved Problems</span>
+          <span class="nav-pill" id="navTotalCount">0</span>
+        </button>
+        <button class="nav-item" data-tab="revision">
+          <span class="nav-icon">🔁</span>
+          <span>Revision Queue</span>
+          <span class="nav-pill pill-rev" id="navRevCount">0</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <span class="nav-icon">⚙️</span>
+          <span>Account & Email</span>
+        </button>
+      </nav>
+
+      <!-- CF User Card -->
+      <div class="cf-user-card" id="cfUserCard" style="display: none;">
+        <img src="" id="cfUserAvatar" alt="Avatar" class="user-avatar">
+        <div class="user-info">
+          <div class="user-handle" id="cfUserHandle">asp775</div>
+          <div class="user-rank" id="cfUserRank">Student</div>
+          <div class="user-email-tag" id="cfUserEmailTag">No email set</div>
+        </div>
+      </div>
+
+      <!-- Quick Storage Actions -->
+      <div class="sidebar-footer">
+        <div class="data-actions">
+          <button id="exportJsonBtn" class="btn-sm btn-ghost" title="Export Backup JSON">
+            📥 Export JSON
+          </button>
+          <button id="importJsonBtn" class="btn-sm btn-ghost" title="Import JSON">
+            📤 Import JSON
+          </button>
+          <input type="file" id="dashboardFileInput" accept=".json" style="display:none;">
+        </div>
+        <button id="syncNowBtn" class="btn-sm btn-outline">
+          ⚡ Sync Solves from Codeforces
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="toggleSidebarTopBtn" class="btn-sidebar-top-toggle active" title="Toggle Left Tab Bar (Ctrl+B)">
+            <svg class="sidebar-icon-svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="4" ry="4"></rect>
+              <path class="sidebar-svg-shade" d="M3 7a4 4 0 0 1 4-4h4v18H7a4 4 0 0 1-4-4V7z" fill="currentColor"></path>
+              <line x1="11" y1="3" x2="11" y2="21"></line>
+            </svg>
+            <span class="toggle-label">Sidebar</span>
+          </button>
+          <div class="topbar-search">
+            <span class="search-glass">🔍</span>
+            <input type="text" id="globalSearch" placeholder="Search saved problems by name, code (e.g. 1800C2), notes, or tags...">
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button id="navToArenaBtn" class="btn-primary">
+            <span>🎯</span> Open Practice Arena
+          </button>
+          <button id="addManualBtn" class="btn-secondary">
+            <span>+</span> Log Problem
+          </button>
+        </div>
+      </header>
+
+      <!-- ================================================================== -->
+      <!-- TAB 1: PRACTICE ARENA (EXPLORER + CODE NOTEPAD & SUBMITTER)       -->
+      <!-- ================================================================== -->
+      <section class="tab-pane" id="pane-arena">
+        <div class="arena-layout">
+          <!-- Left: Problemset Explorer -->
+          <div class="arena-left">
+            <div class="arena-header">
+              <div>
+                <h3>🎯 Codeforces Problem Explorer</h3>
+                <p class="section-help-text">
+                  Search & filter Codeforces problemset by topic and rating without leaving your site.
+                </p>
+              </div>
+              <div class="arena-status-toggle">
+                <button class="status-toggle-btn active" data-arena-status="unsolved">✨ Unsolved Only</button>
+                <button class="status-toggle-btn" data-arena-status="all">All Problems</button>
+                <button class="status-toggle-btn" data-arena-status="solved">Solved Only</button>
+              </div>
+            </div>
+
+            <!-- Topic Filters -->
+            <div class="filter-card">
+              <div class="filter-section-title">Topic / Tag:</div>
+              <div class="topic-chips-wrap" id="topicChips">
+                <button class="chip-filter active" data-tag="">All Topics</button>
+                <button class="chip-filter" data-tag="greedy">Greedy</button>
+                <button class="chip-filter" data-tag="math">Math</button>
+                <button class="chip-filter" data-tag="dp">Dynamic Programming</button>
+                <button class="chip-filter" data-tag="binary search">Binary Search</button>
+                <button class="chip-filter" data-tag="data structures">Data Structures</button>
+                <button class="chip-filter" data-tag="graphs">Graphs & Trees</button>
+                <button class="chip-filter" data-tag="constructive algorithms">Constructive</button>
+                <button class="chip-filter" data-tag="strings">Strings</button>
+                <button class="chip-filter" data-tag="two pointers">Two Pointers</button>
+                <button class="chip-filter" data-tag="bitmasks">Bitmasks</button>
+                <button class="chip-filter" data-tag="number theory">Number Theory</button>
+              </div>
+
+              <!-- Rating Filters -->
+              <div class="filter-section-title" style="margin-top:14px;">Rating Range:</div>
+              <div class="rating-chips-row">
+                <button class="rating-chip active" data-min="800" data-max="800">800 - 800</button>
+                <button class="rating-chip" data-min="800" data-max="900">800 - 900</button>
+                <button class="rating-chip" data-min="900" data-max="1000">900 - 1000</button>
+                <button class="rating-chip" data-min="1000" data-max="1200">1000 - 1200</button>
+                <button class="rating-chip" data-min="1200" data-max="1400">1200 - 1400</button>
+                <button class="rating-chip" data-min="1400" data-max="1600">1400 - 1600</button>
+                <button class="rating-chip" data-min="1600" data-max="1900">1600 - 1900</button>
+                <button class="rating-chip" data-min="1900" data-max="3500">1900+</button>
+              </div>
+
+              <!-- Custom Rating Inputs & Keyword Search -->
+              <div class="custom-rating-row">
+                <div class="input-with-label">
+                  <span>Min:</span>
+                  <input type="number" id="customMinRating" value="800" step="100" min="800" max="3500">
+                </div>
+                <div class="input-with-label">
+                  <span>Max:</span>
+                  <input type="number" id="customMaxRating" value="800" step="100" min="800" max="3500">
+                </div>
+                <input type="text" id="arenaKeywordInput" placeholder="Filter by name..." class="arena-keyword-input">
+                <button id="applyArenaFilterBtn" class="btn-primary-sm">Search Problems</button>
+              </div>
+            </div>
+
+            <!-- Problem Explorer Results Table -->
+            <div class="table-container arena-table-container">
+              <div class="table-sub-header">
+                <span id="arenaResultsCount">Loading Codeforces problems...</span>
+                <span class="badge-pill">Live from Codeforces API</span>
+              </div>
+              <table class="problem-table" id="arenaTable">
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Problem Name</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="arenaTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right: Code Notepad & Submitter Arena -->
+          <div class="arena-right">
+            <div class="notepad-card">
+              <div class="notepad-header">
+                <div class="notepad-title-wrap">
+                  <span class="notepad-icon">📝</span>
+                  <div>
+                    <h4 id="notepadProblemTitle">Select a Problem</h4>
+                    <span class="notepad-sub" id="notepadProblemCode">Click "Solve in Notepad" on any problem</span>
+                  </div>
+                </div>
+                <div class="notepad-tools">
+                  <select id="notepadLanguageSelect" class="custom-select-sm">
+                    <option value="cpp20">C++20 (GCC 13-64)</option>
+                    <option value="python3">Python 3.12</option>
+                    <option value="pypy3">PyPy 3.10</option>
+                    <option value="java21">Java 21</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Problem statement preview link & banner -->
+              <div class="selected-prob-bar" id="selectedProbBar" style="display:none;">
+                <span class="badge-code" id="barCode">4A</span>
+                <span id="barTitle" style="font-weight:600;">Watermelon</span>
+                <span class="rating-tag" id="barRating">★800</span>
+                <a href="#" target="_blank" id="barLink" class="link-cf">Open Statement ↗</a>
+              </div>
+
+              <!-- Live Submission Verdict Banner -->
+              <div class="verdict-banner" id="verdictBanner" style="display:none;">
+                <span class="verdict-icon" id="verdictIcon">⏳</span>
+                <div class="verdict-text-wrap">
+                  <div class="verdict-main" id="verdictMain">Watching Codeforces for submission...</div>
+                  <div class="verdict-sub" id="verdictSub">Account: asp775</div>
+                </div>
+                <button class="btn-sm btn-ghost" id="dismissVerdictBtn">✕</button>
+              </div>
+
+              <!-- Code Notepad Textarea -->
+              <div class="code-editor-wrapper">
+                <div class="editor-top-actions">
+                  <span class="editor-label">Code Notepad (Paste Your Solution Here):</span>
+                  <div style="display:flex; gap:6px;">
+                    <button class="btn-xs btn-ghost" id="pasteCodeBtn">📋 Paste</button>
+                    <button class="btn-xs btn-ghost" id="copyCodeBtn">📄 Copy</button>
+                    <button class="btn-xs btn-ghost" id="clearCodeBtn">↺ Clear</button>
+                  </div>
+                </div>
+                <textarea id="notepadCodeArea" class="code-textarea" spellcheck="false" placeholder="// Paste your solution code here...
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    
+    // your solution...
+    return 0;
+}"></textarea>
+              </div>
+
+              <!-- Submission Controls -->
+              <div class="submit-controls-box">
+                <div class="submit-buttons-row">
+                  <button id="oneClickSubmitBtn" class="btn-submit-cf">
+                    <span class="submit-icon">🚀</span>
+                    <span>1-Click Submit to Codeforces</span>
+                  </button>
+                  <button id="pollVerdictBtn" class="btn-secondary-sm" title="Check latest submission verdict for asp775">
+                    🔄 Check Verdict
+                  </button>
+                </div>
+                <p class="submit-help-text">
+                  Copies code to clipboard & opens Codeforces submit page with the problem pre-selected.
+                </p>
+              </div>
+
+              <!-- Quick Solve Tag & Notes -->
+              <div class="quick-recall-box">
+                <div class="editor-label">Record in SQLite Database:</div>
+                <div class="recall-status-buttons">
+                  <button class="btn-mini-status active" data-arena-class="solo">🟢 Solo (0 Hints)</button>
+                  <button class="btn-mini-status" data-arena-class="hint">🟡 Tutorial/Hint</button>
+                  <button class="btn-mini-status" data-arena-class="solution">🔴 Solution</button>
+                </div>
+                <textarea id="notepadNotesInput" class="notepad-notes-textarea" placeholder="Key trick / why I was stuck (optional)..."></textarea>
+                <div class="notepad-bottom-actions">
+                  <label class="checkbox-mini">
+                    <input type="checkbox" id="notepadRevisitCheck">
+                    <span>⭐ Mark for Revisit</span>
+                  </label>
+                  <button id="saveToDbFromNotepadBtn" class="btn-primary-sm">💾 Save in Database</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- TAB 2: DASHBOARD OVERVIEW                                          -->
+      <!-- ================================================================== -->
+      <section class="tab-pane active" id="pane-dashboard">
+        <!-- Hero Metrics -->
+        <div class="metrics-grid">
+          <div class="metric-card card-total">
+            <div class="metric-icon">🎯</div>
+            <div class="metric-body">
+              <span class="metric-label">Tracked Solves</span>
+              <h3 class="metric-value" id="metricTotal">0</h3>
+              <span class="metric-sub" id="metricSoloRate">0% Solo Solved</span>
+            </div>
+          </div>
+          <div class="metric-card card-solo">
+            <div class="metric-icon">🟢</div>
+            <div class="metric-body">
+              <span class="metric-label">Solved Solo (0 Hints)</span>
+              <h3 class="metric-value" id="metricSolo">0</h3>
+              <span class="metric-sub">Pure independent solves</span>
+            </div>
+          </div>
+          <div class="metric-card card-hint">
+            <div class="metric-icon">🟡</div>
+            <div class="metric-body">
+              <span class="metric-label">With Tutorial / Hint</span>
+              <h3 class="metric-value" id="metricHint">0</h3>
+              <span class="metric-sub">Needed editorial guidance</span>
+            </div>
+          </div>
+          <div class="metric-card card-sol">
+            <div class="metric-icon">🔴</div>
+            <div class="metric-body">
+              <span class="metric-label">Full Solution / Upsolved</span>
+              <h3 class="metric-value" id="metricSol">0</h3>
+              <span class="metric-sub">Looked at solution code</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Breakdown & Analytics -->
+        <div class="dashboard-analytics-row">
+          <div class="card analytics-card">
+            <div class="card-header">
+              <h4>Solve Mastery Ratio</h4>
+              <span class="badge-pill">Real Mastery Ratio</span>
+            </div>
+            <div class="ratio-bar-wrapper">
+              <div class="ratio-bar">
+                <div class="ratio-segment seg-solo" id="ratioBarSolo" style="width: 50%" title="Solo"></div>
+                <div class="ratio-segment seg-hint" id="ratioBarHint" style="width: 30%" title="Tutorial"></div>
+                <div class="ratio-segment seg-sol" id="ratioBarSol" style="width: 20%" title="Solution"></div>
+              </div>
+              <div class="ratio-legend">
+                <div class="legend-item"><span class="dot dot-solo"></span> Solo: <b id="legSoloPct">0%</b></div>
+                <div class="legend-item"><span class="dot dot-hint"></span> With Hint: <b id="legHintPct">0%</b></div>
+                <div class="legend-item"><span class="dot dot-sol"></span> Solution: <b id="legSolPct">0%</b></div>
+              </div>
+            </div>
+
+            <!-- Rating buckets breakdown -->
+            <div class="rating-breakdown" id="ratingBreakdown">
+              <div class="rating-bucket-title">Solo Solves by Rating</div>
+              <div class="bucket-row">
+                <span class="bucket-name">&le; 1200</span>
+                <div class="bucket-bar-bg"><div class="bucket-bar-fill" id="bucketFill1200" style="width: 0%"></div></div>
+                <span class="bucket-val" id="bucketVal1200">0/0</span>
+              </div>
+              <div class="bucket-row">
+                <span class="bucket-name">1300 - 1500</span>
+                <div class="bucket-bar-bg"><div class="bucket-bar-fill" id="bucketFill1500" style="width: 0%"></div></div>
+                <span class="bucket-val" id="bucketVal1500">0/0</span>
+              </div>
+              <div class="bucket-row">
+                <span class="bucket-name">1600 - 1800</span>
+                <div class="bucket-bar-bg"><div class="bucket-bar-fill" id="bucketFill1800" style="width: 0%"></div></div>
+                <span class="bucket-val" id="bucketVal1800">0/0</span>
+              </div>
+              <div class="bucket-row">
+                <span class="bucket-name">1900+</span>
+                <div class="bucket-bar-bg"><div class="bucket-bar-fill" id="bucketFill1900" style="width: 0%"></div></div>
+                <span class="bucket-val" id="bucketVal1900">0/0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spaced Repetition Due Card -->
+          <div class="card revision-preview-card">
+            <div class="card-header">
+              <h4>🔁 Revisit Queue (Spaced Repetition)</h4>
+              <button class="btn-sm btn-ghost" id="viewAllRevisionBtn">View All ↗</button>
+            </div>
+            <p class="section-help-text">
+              Problems you marked to re-solve without looking at the tutorial:
+            </p>
+            <div class="revision-mini-list" id="revisionMiniList"></div>
+          </div>
+        </div>
+
+        <!-- Recent Solves Table Header -->
+        <div class="section-header-row">
+          <h3>Recently Saved Problems in Database</h3>
+          <div class="filter-pill-group">
+            <button class="pill-btn active" data-dash-filter="all">All</button>
+            <button class="pill-btn" data-dash-filter="solo">🟢 Solo</button>
+            <button class="pill-btn" data-dash-filter="hint">🟡 Tutorial</button>
+            <button class="pill-btn" data-dash-filter="solution">🔴 Solution</button>
+            <button class="pill-btn" data-dash-filter="revisit">⭐ Revisit</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="problem-table" id="dashboardTable">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Problem Name</th>
+                <th>Difficulty</th>
+                <th>Solve Status</th>
+                <th>Notes / Takeaway</th>
+                <th>Tags</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- TAB 3: ALL SAVED PROBLEMS                                          -->
+      <!-- ================================================================== -->
+      <section class="tab-pane" id="pane-problems">
+        <div class="filter-toolbar">
+          <div class="filter-group">
+            <label>Status:</label>
+            <select id="filterStatusSelect" class="custom-select">
+              <option value="all">All Statuses</option>
+              <option value="solo">🟢 Solved Solo</option>
+              <option value="hint">🟡 With Tutorial/Hint</option>
+              <option value="solution">🔴 Full Solution</option>
+              <option value="progress">🟣 In Progress</option>
+              <option value="revisit">⭐ Needs Revisit</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Rating:</label>
+            <select id="filterRatingSelect" class="custom-select">
+              <option value="all">All Ratings</option>
+              <option value="800-1100">800 - 1100 (Beginner)</option>
+              <option value="1200-1400">1200 - 1400 (Specialist)</option>
+              <option value="1500-1800">1500 - 1800 (Expert)</option>
+              <option value="1900-2100">1900 - 2100 (Candidate Master)</option>
+              <option value="2200-3500">2200+ (Master+)</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Tag:</label>
+            <select id="filterTagSelect" class="custom-select">
+              <option value="all">All Topics</option>
+              <option value="dp">Dynamic Programming</option>
+              <option value="greedy">Greedy</option>
+              <option value="math">Math & Number Theory</option>
+              <option value="data structures">Data Structures</option>
+              <option value="binary search">Binary Search</option>
+              <option value="graphs">Graphs & Trees</option>
+              <option value="strings">Strings</option>
+              <option value="two pointers">Two Pointers</option>
+            </select>
+          </div>
+          <div class="view-toggle">
+            <button class="btn-icon active" id="viewTableBtn" title="Table View">☰</button>
+            <button class="btn-icon" id="viewCardsBtn" title="Cards View">⊞</button>
+          </div>
+        </div>
+
+        <div class="table-container" id="problemsTableWrap">
+          <table class="problem-table" id="allProblemsTable">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Problem Name</th>
+                <th>Rating</th>
+                <th>Status</th>
+                <th>Key Insight / Mistake</th>
+                <th>Tags</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="allProblemsTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="cards-grid" id="problemsCardsWrap" style="display:none;"></div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- TAB 4: REVISION QUEUE                                              -->
+      <!-- ================================================================== -->
+      <section class="tab-pane" id="pane-revision">
+        <div class="revision-header">
+          <div>
+            <h3>🔁 Spaced Repetition & Revision Queue</h3>
+            <p class="section-help-text">
+              The fastest way to rank up in Codeforces is re-attempting problems you solved with editorial 3–7 days later.
+            </p>
+          </div>
+        </div>
+        <div class="revision-cards-list" id="revisionFullList"></div>
+      </section>
+
+      <!-- ================================================================== -->
+      <!-- TAB 5: ACCOUNT & EMAIL SETTINGS                                    -->
+      <!-- ================================================================== -->
+      <section class="tab-pane" id="pane-settings">
+        <div class="settings-card">
+          <div class="sync-banner">
+            <h3>⚙️ Account & Email Settings</h3>
+            <p>Connect your Codeforces handle and email ID to keep your practice and submissions synced with your Mac database.</p>
+          </div>
+          <div class="settings-form">
+            <div class="form-row">
+              <label class="form-label">Codeforces Handle:</label>
+              <input type="text" id="settingsHandleInput" class="modal-input" placeholder="e.g. asp775" value="asp775">
+            </div>
+            <div class="form-row">
+              <label class="form-label">Email ID:</label>
+              <input type="email" id="settingsEmailInput" class="modal-input" placeholder="e.g. your_email@example.com">
+            </div>
+            <div class="form-row">
+              <label class="form-label">Default Programming Language:</label>
+              <select id="settingsLangSelect" class="custom-select">
+                <option value="cpp20">C++20 (GCC 13-64)</option>
+                <option value="python3">Python 3.12</option>
+                <option value="pypy3">PyPy 3.10</option>
+                <option value="java21">Java 21</option>
+              </select>
+            </div>
+            <button id="saveSettingsBtn" class="btn-primary" style="margin-top:12px;">
+              💾 Save Account Settings
+            </button>
+            <div id="settingsStatusMsg" class="sync-status-box" style="display:none; margin-top:12px;"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- PROBLEM DETAILS / EDIT MODAL -->
+  <div class="modal-backdrop" id="problemModalBackdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="badge-code" id="modalCode">1800C2</span>
+          <h3 id="modalTitle">Problem Name</h3>
+        </div>
+        <button class="modal-close" id="modalCloseBtn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <label class="form-label">Solve Classification:</label>
+          <div class="status-choice-group">
+            <button class="btn-choice" data-choice="solo">🟢 Solved Solo (0 Hints)</button>
+            <button class="btn-choice" data-choice="hint">🟡 With Tutorial/Hint</button>
+            <button class="btn-choice" data-choice="solution">🔴 Full Solution</button>
+            <button class="btn-choice" data-choice="progress">🟣 In Progress</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">
+            <span>Notes & Key Insights:</span>
+            <span class="label-sub">What was the breakthrough invariant? What edge cases bit you?</span>
+          </label>
+          <textarea id="modalNotesInput" class="modal-textarea" rows="4" placeholder="Write your notes here..."></textarea>
+        </div>
+        <div class="form-row form-grid-2">
+          <div>
+            <label class="form-label">Difficulty Rating:</label>
+            <input type="number" id="modalRatingInput" class="modal-input" placeholder="e.g. 1400">
+          </div>
+          <div>
+            <label class="form-label">Time Spent (Minutes):</label>
+            <input type="number" id="modalTimeInput" class="modal-input" placeholder="e.g. 25">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Topic Tags (comma separated):</label>
+          <input type="text" id="modalTagsInput" class="modal-input" placeholder="dp, greedy, math, binary search">
+        </div>
+        <div class="form-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="modalRevisitCheck">
+            <span>⭐ Add to Spaced Repetition Revision Queue</span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-danger-outline" id="modalDeleteBtn">Delete Record</button>
+        <div class="modal-footer-right">
+          <a href="#" target="_blank" id="modalCfLink" class="btn-secondary">Open on CF ↗</a>
+          <button class="btn-primary" id="modalSaveBtn">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

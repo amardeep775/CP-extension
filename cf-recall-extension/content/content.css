@@ -1,0 +1,489 @@
+/* ==========================================================================
+   CF Recall - Content Styles
+   Modern Cyberpunk/Glassmorphic HUD for Codeforces
+   ========================================================================== */
+
+:root {
+  --cfr-bg: rgba(15, 23, 42, 0.94);
+  --cfr-border: rgba(99, 102, 241, 0.35);
+  --cfr-text: #f8fafc;
+  --cfr-text-muted: #94a3b8;
+  --cfr-solo: #10b981;
+  --cfr-solo-bg: rgba(16, 185, 129, 0.15);
+  --cfr-hint: #f59e0b;
+  --cfr-hint-bg: rgba(245, 158, 11, 0.15);
+  --cfr-sol: #ef4444;
+  --cfr-sol-bg: rgba(239, 68, 68, 0.15);
+  --cfr-progress: #8b5cf6;
+  --cfr-progress-bg: rgba(139, 92, 246, 0.15);
+  --cfr-revisit: #ec4899;
+  --cfr-revisit-bg: rgba(236, 72, 153, 0.15);
+  --cfr-accent: #6366f1;
+  --cfr-accent-glow: rgba(99, 102, 241, 0.5);
+  --cfr-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.6), 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+/* Floating Dock Container */
+#cfr-dock-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999999;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--cfr-text);
+}
+
+/* Collapsed Toggle Button */
+#cfr-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: var(--cfr-bg);
+  border: 1px solid var(--cfr-border);
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: var(--cfr-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+#cfr-toggle-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: var(--cfr-accent);
+  box-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.7), 0 0 25px var(--cfr-accent-glow);
+}
+
+.cfr-badge-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 11px;
+}
+
+.cfr-status-text {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* Expanded Card Panel */
+#cfr-card-panel {
+  position: absolute;
+  bottom: 54px;
+  right: 0;
+  width: 340px;
+  background: var(--cfr-bg);
+  border: 1px solid var(--cfr-border);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: var(--cfr-shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  animation: cfr-pop-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#cfr-card-panel.cfr-show {
+  display: flex;
+}
+
+@keyframes cfr-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Card Header */
+.cfr-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 10px;
+}
+
+.cfr-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cfr-logo-tag {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  padding: 3px 7px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cfr-problem-tag {
+  font-weight: 700;
+  font-size: 13px;
+  color: #38bdf8;
+}
+
+.cfr-close-btn {
+  background: none;
+  border: none;
+  color: var(--cfr-text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.cfr-close-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Status Button Grid */
+.cfr-status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.cfr-btn-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--cfr-text-muted);
+  transition: all 0.2s ease;
+}
+
+.cfr-btn-status:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.cfr-btn-status.active[data-status="solo"] {
+  background: var(--cfr-solo-bg);
+  color: var(--cfr-solo);
+  border-color: var(--cfr-solo);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+}
+
+.cfr-btn-status.active[data-status="hint"] {
+  background: var(--cfr-hint-bg);
+  color: var(--cfr-hint);
+  border-color: var(--cfr-hint);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.35);
+}
+
+.cfr-btn-status.active[data-status="solution"] {
+  background: var(--cfr-sol-bg);
+  color: var(--cfr-sol);
+  border-color: var(--cfr-sol);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+}
+
+.cfr-btn-status.active[data-status="progress"] {
+  background: var(--cfr-progress-bg);
+  color: var(--cfr-progress);
+  border-color: var(--cfr-progress);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.35);
+}
+
+/* Revisit & Stopwatch Row */
+.cfr-tools-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cfr-revisit-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--cfr-text-muted);
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.cfr-revisit-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cfr-revisit-toggle.active {
+  background: var(--cfr-revisit-bg);
+  color: var(--cfr-revisit);
+  border-color: var(--cfr-revisit);
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
+}
+
+.cfr-timer-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  font-size: 11px;
+}
+
+.cfr-timer-display {
+  color: #38bdf8;
+  min-width: 42px;
+}
+
+.cfr-timer-btn {
+  background: none;
+  border: none;
+  color: var(--cfr-text-muted);
+  cursor: pointer;
+  padding: 2px;
+  font-size: 12px;
+  transition: color 0.15s;
+}
+
+.cfr-timer-btn:hover {
+  color: #fff;
+}
+
+/* Notes Textarea */
+.cfr-notes-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cfr-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cfr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cfr-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  resize: vertical;
+  min-height: 60px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cfr-textarea:focus {
+  border-color: var(--cfr-accent);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+}
+
+.cfr-textarea::placeholder {
+  color: rgba(148, 163, 184, 0.5);
+}
+
+/* Quick Tags */
+.cfr-tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.cfr-chip {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--cfr-text-muted);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.cfr-chip:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.cfr-chip.active {
+  background: rgba(99, 102, 241, 0.2);
+  color: #818cf8;
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+/* Footer / Save / Dashboard Link */
+.cfr-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+  font-size: 11px;
+}
+
+.cfr-save-status {
+  color: #10b981;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.cfr-save-status.visible {
+  opacity: 1;
+}
+
+.cfr-dash-link {
+  color: #818cf8;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s;
+}
+
+.cfr-dash-link:hover {
+  color: #c7d2fe;
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Injected Problem Title Badge (On Problem Page)
+   ========================================================================== */
+.cfr-title-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 12px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.cfr-title-badge:hover {
+  transform: translateY(-1px) scale(1.03);
+}
+
+.cfr-title-badge.cfr-badge-solo {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.cfr-title-badge.cfr-badge-hint {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+.cfr-title-badge.cfr-badge-solution {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+.cfr-title-badge.cfr-badge-progress {
+  background: #ede9fe;
+  color: #5b21b6;
+  border: 1px solid #8b5cf6;
+}
+
+.cfr-title-badge.cfr-badge-untracked {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px dashed #94a3b8;
+}
+
+/* ==========================================================================
+   Problemset Table Injected Pills
+   ========================================================================== */
+.cfr-table-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 6px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.cfr-table-pill.solo {
+  background: #d1fae5;
+  color: #047857;
+  border: 1px solid #34d399;
+}
+
+.cfr-table-pill.hint {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fbbf24;
+}
+
+.cfr-table-pill.solution {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #f87171;
+}
+
+.cfr-table-pill.progress {
+  background: #ede9fe;
+  color: #6d28d9;
+  border: 1px solid #a78bfa;
+}
+
+.cfr-table-pill.revisit {
+  background: #fce7f3;
+  color: #be185d;
+  border: 1px solid #f472b6;
+  margin-left: 3px;
+}

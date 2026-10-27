@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>C2. Powering the Hero (hard version) - Codeforces</title>
+  <!-- Codeforces-like styling -->
+  <style>
+    body {
+      font-family: verdana, arial, sans-serif;
+      font-size: 14px;
+      background: #f8fafc;
+      margin: 0;
+      padding: 20px 40px;
+      color: #333;
+    }
+    .cf-nav {
+      background: #fff;
+      border-bottom: 2px solid #b9b9b9;
+      padding: 12px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .cf-logo {
+      font-size: 20px;
+      font-weight: bold;
+      color: #1a0dab;
+    }
+    .cf-layout {
+      display: flex;
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .problem-statement {
+      flex: 1;
+      background: #fff;
+      padding: 28px 36px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      line-height: 1.6;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .title {
+      font-size: 22px;
+      font-weight: bold;
+      color: #1a0dab;
+      margin-bottom: 8px;
+    }
+    .time-limit, .memory-limit {
+      font-size: 12px;
+      color: #555;
+    }
+    .sample-test {
+      background: #f1f5f9;
+      padding: 12px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin-top: 14px;
+    }
+    .sidebar-cf {
+      width: 260px;
+    }
+    .roundbox {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .caption {
+      font-weight: bold;
+      color: #3b5998;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+    .tag-box {
+      display: inline-block;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      margin: 2px;
+      color: #475569;
+    }
+    .banner-demo {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .banner-demo a {
+      color: #fef08a;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  </style>
+
+  <!-- Injected CF Recall Content Script CSS -->
+  <link rel="stylesheet" href="../cf-recall-extension/content/content.css">
+</head>
+<body>
+
+  <!-- Demo Notice Banner -->
+  <div class="banner-demo">
+    <div>
+      <b>⚡ CF Recall Local Demo Environment</b> — This page simulates a real Codeforces problem page (<code>1800C2</code>).
+      Test clicking the floating pill in the bottom-right or the title badge!
+    </div>
+    <div>
+      <a href="../cf-recall-dashboard/index.html">Open Web Dashboard ↗</a>
+    </div>
+  </div>
+
+  <div class="cf-nav">
+    <div class="cf-logo">CODEFORCES</div>
+    <div style="font-size: 13px; color: #555;">Mock Problem View: Contest 1800 &bull; Problem C2</div>
+  </div>
+
+  <div class="cf-layout">
+    <div class="problem-statement">
+      <div class="header">
+        <div class="title">C2. Powering the Hero (hard version)</div>
+        <div class="time-limit">time limit per test: 2.0 seconds</div>
+        <div class="memory-limit">memory limit per test: 512 megabytes</div>
+      </div>
+
+      <div class="legend">
+        <p>This is a hard version of the problem. It differs from the easy version only by the constraints on $n$ and $\sum n$.</p>
+        <p>There is a deck of $n$ cards. Each card is either a hero card with power $s_i = 0$ or a bonus card with power $s_i > 0$.</p>
+        <p>You can take cards from the top of the deck one by one. You want to maximize the total army power by assigning bonus cards to your heroes!</p>
+      </div>
+
+      <div class="input-specification">
+        <h4>Input</h4>
+        <p>The first line contains an integer $t$ ($1 \le t \le 10^4$) — the number of test cases.</p>
+        <p>The second line contains $n$ ($1 \le n \le 2 \cdot 10^5$) — the number of cards.</p>
+      </div>
+
+      <div class="sample-test">
+        <b>Sample Input:</b><br>
+        5<br>
+        5<br>
+        3 3 0 0 0<br><br>
+        <b>Sample Output:</b><br>
+        6
+      </div>
+    </div>
+
+    <div class="sidebar-cf">
+      <div class="roundbox">
+        <div class="caption">&rarr; Problem tags</div>
+        <span class="tag-box" title="Difficulty">*1300</span>
+        <span class="tag-box">data structures</span>
+        <span class="tag-box">greedy</span>
+        <span class="tag-box">priority-queue</span>
+      </div>
+      <div class="roundbox">
+        <div class="caption">&rarr; Contest</div>
+        <div style="font-size: 12px; color: #555;">Codeforces Round 855 (Div. 3)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Injected CF Recall Content Script JS -->
+  <script src="../cf-recall-extension/content/content.js"></script>
+</body>
+</html>

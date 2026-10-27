@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CF Recall</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <h1>CF Recall</h1>
+          <span class="version">Codeforces Tracker</span>
+        </div>
+      </div>
+      <button id="openDashboardTopBtn" class="btn-icon" title="Open Full Dashboard">↗</button>
+    </header>
+
+    <!-- Stat Badges -->
+    <div class="stats-grid">
+      <div class="stat-card stat-solo" data-filter="solo">
+        <div class="stat-val" id="countSolo">0</div>
+        <div class="stat-lbl">🟢 Solo</div>
+      </div>
+      <div class="stat-card stat-hint" data-filter="hint">
+        <div class="stat-val" id="countHint">0</div>
+        <div class="stat-lbl">🟡 Editorial</div>
+      </div>
+      <div class="stat-card stat-sol" data-filter="solution">
+        <div class="stat-val" id="countSol">0</div>
+        <div class="stat-lbl">🔴 Solution</div>
+      </div>
+      <div class="stat-card stat-revisit" data-filter="revisit">
+        <div class="stat-val" id="countRevisit">0</div>
+        <div class="stat-lbl">⭐ Revisit</div>
+      </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search problems, tags, notes...">
+    </div>
+
+    <!-- Problem List -->
+    <div class="problems-section">
+      <div class="section-title">
+        <span id="listTitle">Recent Problems</span>
+        <span class="total-badge" id="totalCount">0</span>
+      </div>
+      <div class="problems-list" id="problemsList">
+        <div class="empty-state">
+          <p>No problems tracked yet.</p>
+          <p class="sub">Open any Codeforces problem and click the <b>CF Recall</b> pill to track!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Controls -->
+    <footer class="popup-footer">
+      <button id="openDashboardBtn" class="btn-primary">Open Web Dashboard 📊</button>
+      <div class="footer-actions">
+        <button id="exportBtn" class="btn-secondary" title="Export Backup JSON">Export</button>
+        <button id="importBtn" class="btn-secondary" title="Import JSON">Import</button>
+        <input type="file" id="importFileInput" accept=".json" style="display:none;">
+      </div>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "CF Recall - Codeforces Solve Tracker",
+  "version": "1.0.0",
+  "description": "Track whether you solved Codeforces problems Solo, with Editorial, or full Solution. Add notes, tags, and revision queues.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "*://codeforces.com/*",
+    "*://*.codeforces.com/*",
+    "http://localhost:3344/*",
+    "http://127.0.0.1:3344/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://codeforces.com/problemset/problem/*",
+        "*://codeforces.com/contest/*/problem/*",
+        "*://codeforces.com/contest/*/submit*",
+        "*://codeforces.com/gym/*/problem/*",
+        "*://codeforces.com/problemset*",
+        "*://*.codeforces.com/problemset/problem/*",
+        "*://*.codeforces.com/contest/*/problem/*",
+        "*://*.codeforces.com/contest/*/submit*",
+        "*://*.codeforces.com/gym/*/problem/*",
+        "*://*.codeforces.com/problemset*"
+      ],
+      "css": [
+        "content/content.css"
+      ],
+      "js": [
+        "content/content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ]
+}
